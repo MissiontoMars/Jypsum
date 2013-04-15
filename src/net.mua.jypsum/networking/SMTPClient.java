@@ -7,7 +7,7 @@ import net.mua.jypsum.mail.Envelope;
 
 public class SMTPClient {
     private Socket connection;
-    private BufferedInputStream fromServer;
+    private BufferedReader fromServer;
     private DataOutputStream toServer;
     private static final int SMTP_PORT = 25;
     private static final String CRLF = "\r\n";
@@ -16,9 +16,9 @@ public class SMTPClient {
      * @param env
      */
     public SMTPClient(Envelope env) throws IOException {
-        connection =;
-        fromServer =;
-        toServer =;
+        connection = new Socket(env.destHost, SMTP_PORT);
+        fromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        toServer = new DataOutputStream(clientSocket.getOutputStream());
         private String localhost = ;
         sendCommand(); //Handshake
         isConnected = true;

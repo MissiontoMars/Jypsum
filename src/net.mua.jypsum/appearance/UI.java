@@ -68,7 +68,7 @@ public class UI extends Frame {
 		fieldPanel.add(subjectPanel);
 
 		/* Create a panel for the buttons and add listeners to the
-       buttons. */
+        buttons. */
 		Panel buttonPanel = new Panel(new GridLayout(1, 0));
 		btSend.addActionListener(new SendListener());
 		btClear.addActionListener(new ClearListener());
@@ -124,13 +124,13 @@ public class UI extends Frame {
 						serverField.getText());
 
 				/* Check that the message is valid, i.e., sender and
-           recipient addresses look ok. */
+                recipient addresses look ok. */
 				if(!mailMessage.isValid()) {
 					return;
 				}
 
 				/* Create the envelope, open the connection and try to send
-           the message. */
+                the message. */
 				try {
 					envelope = new Envelope(mailMessage, 
 							serverField.getText());
@@ -143,7 +143,6 @@ public class UI extends Frame {
 			catch(IOException e) {
 				return;
 			}
-
 
 			try {
 				SMTPConnection connection = new SMTPConnection(envelope);

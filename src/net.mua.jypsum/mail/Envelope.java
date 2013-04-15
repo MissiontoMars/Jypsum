@@ -20,18 +20,18 @@ public class Envelope {
     public InetAddress destAddr; /* Destination Server address */
 
     /* The actual message */
-    public Msg myMsg;
+    public Msg message;
 
     /* Create the envelope. */
-    public Envelope(Msg message, String myServer) throws UnknownHostException {
+    public Envelope(Msg myMessage, String myServer) throws UnknownHostException {
         /* Get sender, recipient, and Cc (if there). */
-	    sender = message.getFrom();
-    	recipient = message.getTo();
-        cc = message.getCc();
+	    sender = myMessage.getFrom();
+    	recipient = myMessage.getTo();
+        cc = myMessage.getCc();
         /* Get message. We must escape the message to make sure that 
         there are no single periods on a line.
         This would mess up sending the mail. */
-        myMsg = escapeMessage(message); 
+        message = escapeMessage(myMessage); 
         /* Take the name of the local mailserver and map it into an
         * InetAddress */
         destHost = myServer;
@@ -47,10 +47,10 @@ public class Envelope {
 
     /* Escape the message by doubling all periods at the beginning of
        a line. */
-    private Msg escapeMessage(Msg message) {
+    private Msg escapeMessage(Msg myMessage) {
         String escapedBody = "";
         String token;
-        StringTokenizer parser = new StringTokenizer(message.myBody, "\n", true);
+        StringTokenizer parser = new StringTokenizer(myMessage.myBody, "\n", true);
 
         while(parser.hasMoreTokens()) {
             token = parser.nextToken();
@@ -59,8 +59,8 @@ public class Envelope {
             }
             escapedBody += token;
         }
-        message.myBody = escapedBody;
-        return message;
+        myMessage.myBody = escapedBody;
+        return myMessage;
     }
 
     /* For printing the envelope. Only for debug. */
@@ -69,7 +69,7 @@ public class Envelope {
         res += "Recipient: " + recipient + '\n';
         res += "MX-host: " + destHost + ", address: " + destAddr + '\n';
         res += "Message:" + '\n';
-        res += myMsg.toString();
+        res += message.toString();
 	
         return res;
     }
