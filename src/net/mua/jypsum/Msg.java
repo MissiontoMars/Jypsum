@@ -1,4 +1,4 @@
-package net.mua.jypsum.mail;
+package net.mua.jypsum;
 
 import java.net.*;
 import java.io.*;
@@ -84,8 +84,8 @@ public class Msg {
     
     public String toString() {
         String res;
-        res = myHeaders + CRLF;
-        res += myBody;
+        res = headers + CRLF;
+        res += body;
         return res;
     }
 }

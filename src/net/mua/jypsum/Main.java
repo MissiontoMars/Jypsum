@@ -1,7 +1,5 @@
 package net.mua.jypsum;
 
-import net.mua.jypsum.appearance.UI;
-
 public class Main {
 	    @SuppressWarnings("unused")
 		public Main () {
