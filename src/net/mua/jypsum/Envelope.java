@@ -44,20 +44,21 @@ public class Envelope {
         }
         return;
     }
+
     //Returns for DATA transmission Header and Body w/ escape sequence
     public String dataString(Msg myMsg) {
         String out = myMsg.getHeader() + CLRF;
-        out += myMsg.getBody();
-        out += CLRF + "." CLRF;
+        out += escapeMessage(myMsg.getBody());
+        out += CLRF + "." + CLRF;
         return out;
     }
 
     /* Escape the message by doubling all periods at the beginning of
        a line. */
-    private Msg escapeMessage(Msg myMessage) {
+    private String escapeMessage(String msg) {
         String escapedBody = "";
         String token;
-        StringTokenizer parser = new StringTokenizer(myMessage.body, "\n", true);
+        StringTokenizer parser = new StringTokenizer(msg, "\n", true);
 
         while(parser.hasMoreTokens()) {
             token = parser.nextToken();
@@ -66,8 +67,7 @@ public class Envelope {
             }
             escapedBody += token;
         }
-        myMessage.body = escapedBody;
-        return myMessage;
+        return escapedBody;
     }
 
     /* For printing the envelope. Only for debug. */

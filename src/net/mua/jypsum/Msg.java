@@ -27,10 +27,10 @@ public class Msg {
         to = myTo.trim();
         cc = myCc.trim();
 
-        headers = "From:" + from + CRLF;
-        headers += "To:" + to + CRLF;
-        headers += "Cc:" + cc + CRLF;
-        headers += "Subject:" + subject.trim() + CRLF;
+        headers = "From: " + from + CRLF;
+        headers += "To: " + to + CRLF;
+        headers += "Cc: " + cc + CRLF;
+        headers += "Subject: " + subject.trim() + CRLF;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'");
         String dateString = dateFormat.format(new Date());
@@ -40,8 +40,8 @@ public class Msg {
     
     public String getHeaders() { return headers; }
     public String getBody() { return body; }
-    public String getFrom() { return from; }
-    public String getTo() { return to; }
+    public String getFrom() { return "<" + from + ">"; }
+    public String getTo() { return "<" + to + ">"; }
     public String getCc() { return cc; }
 
     public boolean isValid() {
@@ -84,14 +84,11 @@ public class Msg {
     
     public String toString() {
         String res;
-<<<<<<< HEAD:src/net.mua.jypsum/mail/Msg.java
         res = myHeaders + CRLF;
         res += myBody;
         res += CRLF + "." CRLF;
-=======
         res = headers + CRLF;
         res += body;
->>>>>>> 16478485181b1a0c745759ff9d6a13a4336995d7:src/net/mua/jypsum/Msg.java
         return res;
     }
 }
