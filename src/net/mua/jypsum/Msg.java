@@ -1,4 +1,4 @@
-package net.mua.jypsum.mail;
+package net.mua.jypsum;
 
 import java.net.*;
 import java.io.*;
@@ -84,9 +84,14 @@ public class Msg {
     
     public String toString() {
         String res;
+<<<<<<< HEAD:src/net.mua.jypsum/mail/Msg.java
         res = myHeaders + CRLF;
         res += myBody;
         res += CRLF + "." CRLF;
+=======
+        res = headers + CRLF;
+        res += body;
+>>>>>>> 16478485181b1a0c745759ff9d6a13a4336995d7:src/net/mua/jypsum/Msg.java
         return res;
     }
 }

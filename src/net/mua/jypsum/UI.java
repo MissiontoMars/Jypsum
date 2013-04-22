@@ -1,4 +1,4 @@
-package net.mua.jypsum.appearance;
+package net.mua.jypsum;
 import java.io.*;
 import java.net.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ public class UI extends Frame {
 	private Label ccLabel = new Label("cc:");
 	private TextField ccField = new TextField("",40);
 
-	private Checkbox userName = new Checkbox("Auto Generate?");
+	private Checkbox usrName = new Checkbox("Auto Generate?");
 
 	private Label subjectLabel = new Label("Subject:");
 	private TextField subjectField = new TextField("",40);
@@ -115,7 +115,7 @@ public class UI extends Frame {
 
 			// Modified the message format to include Extra fields
 			try {
-				Message mailMessage = new Message(fromField.getText(), 
+				Msg mailMessage = new Msg(fromField.getText(), 
 						toField.getText(),
 						ccField.getText(),
 						subjectField.getText(), 
@@ -145,7 +145,7 @@ public class UI extends Frame {
 			}
 
 			try {
-				SMTPConnection connection = new SMTPConnection(envelope);
+				SMTPClient connection = new SMTPClient(envelope);
 				connection.send(envelope);
 				connection.close();
 			} catch (IOException error) {

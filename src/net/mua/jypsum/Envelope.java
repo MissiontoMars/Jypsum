@@ -1,4 +1,4 @@
-package net.mua.jypsum.mail;
+package net.mua.jypsum;
 
 import java.io.*;
 import java.net.*;
@@ -57,7 +57,7 @@ public class Envelope {
     private Msg escapeMessage(Msg myMessage) {
         String escapedBody = "";
         String token;
-        StringTokenizer parser = new StringTokenizer(myMessage.myBody, "\n", true);
+        StringTokenizer parser = new StringTokenizer(myMessage.body, "\n", true);
 
         while(parser.hasMoreTokens()) {
             token = parser.nextToken();
@@ -66,7 +66,7 @@ public class Envelope {
             }
             escapedBody += token;
         }
-        myMessage.myBody = escapedBody;
+        myMessage.body = escapedBody;
         return myMessage;
     }
 
