@@ -43,7 +43,7 @@ public class Msg {
     public String getFrom() { return from; }
     public String getTo() { return to; }
     public String getCc() { return cc; }
-    
+
     public boolean isValid() {
         int fromAt = from.indexOf('@');
         int toAt = to.indexOf('@');
@@ -86,6 +86,7 @@ public class Msg {
         String res;
         res = myHeaders + CRLF;
         res += myBody;
+        res += CRLF + "." CRLF;
         return res;
     }
 }

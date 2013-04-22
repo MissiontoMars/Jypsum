@@ -44,6 +44,13 @@ public class Envelope {
         }
         return;
     }
+    //Returns for DATA transmission Header and Body w/ escape sequence
+    public String dataString(Msg myMsg) {
+        String out = myMsg.getHeader() + CLRF;
+        out += myMsg.getBody();
+        out += CLRF + "." CLRF;
+        return out;
+    }
 
     /* Escape the message by doubling all periods at the beginning of
        a line. */
