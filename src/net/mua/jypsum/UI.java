@@ -145,7 +145,12 @@ public class UI extends Frame {
 			}
 
 			try {
-				SMTPClient connection = new SMTPClient(envelope);
+                //COMMENT TO DEBUG
+                SMTPClient Connection = new SMTPDebugger(envelope);
+			    //UNCOMMENT TO DEBUG
+				SMTPClient connection = new SMTPDebugger(envelope);
+				//END DEBUG
+				
 				connection.send(envelope);
 				connection.close();
 			} catch (IOException error) {

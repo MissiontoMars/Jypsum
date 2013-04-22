@@ -22,7 +22,7 @@ public class Msg {
         if (state) {
             from = userName + "@" + hostServer;
         } else {
-            from = from.trim();
+            from = myFrom.trim();
         }
         to = myTo.trim();
         cc = myCc.trim();
@@ -84,9 +84,9 @@ public class Msg {
     
     public String toString() {
         String res;
-        res = myHeaders + CRLF;
-        res += myBody;
-        res += CRLF + "." CRLF;
+        res = headers + CRLF;
+        res += body;
+        res += CRLF + "." + CRLF;
         res = headers + CRLF;
         res += body;
         return res;

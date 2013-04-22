@@ -4,12 +4,12 @@ import java.io.*;
 import java.util.*;
 
 public class SMTPClient {
-    private Socket clientSocket;
-    private BufferedReader fromServer;
-    private DataOutputStream toServer;
-    private static final int SMTP_PORT = 25;
-    private static final String CRLF = "\r\n";
-    private boolean isConnected = false;
+    protected Socket clientSocket;
+    protected BufferedReader fromServer;
+    protected DataOutputStream toServer;
+    protected static final int SMTP_PORT = 25;
+    protected static final String CRLF = "\r\n";
+    protected boolean isConnected = false;
     /**
      * @param env
      */
@@ -20,7 +20,7 @@ public class SMTPClient {
         
         String localhost = InetAddress.getLocalHost().toString();
         
-        sendCommand("HELO", 354); //Handshake
+        sendCommand("HELO", 250); //Handshake
         isConnected = true;
     }
     
@@ -28,7 +28,7 @@ public class SMTPClient {
         sendCommand("MAIL FROM", myEnv.sender, 250);
         sendCommand("RCPT TO", myEnv.recipient, 250);
         sendCommand("DATA", 354);
-        sendCommand(myEnv.message.toString(), 250);
+        sendCommand(myEnv.eLetter, 250);
         //sendCommand(CLRF + "." + CLRF, 250);
         this.close();
     }
@@ -43,7 +43,7 @@ public class SMTPClient {
         }
     }
     
-    private void sendCommand(String cmd, String append, int expReply) throws IOException {
+    protected void sendCommand(String cmd, String append, int expReply) throws IOException {
         //command to server
         if (!append.isEmpty()) {
             toServer.writeBytes(cmd + " " + append + CRLF);
@@ -55,9 +55,12 @@ public class SMTPClient {
         //verify server reply code is same as parameter
         //throw exception if not
         if (replyCode == expReply) {
+            System.out.println("Sending to Server:");
+            System.out.println(cmd);
+            System.out.println("Received code: " + replyCode);
         } else {
-            System.out.println("Rcv code " + replyCode);
-            System.out.println("expected " + expReply);
+            System.out.println("Rcv code: " + replyCode);
+            System.out.println("expected: " + expReply);
             throw new IOException();
         }
         
@@ -65,12 +68,13 @@ public class SMTPClient {
     
     //Sugar for sending commands without user input fields
     //Like HELO
-    private void sendCommand(String cmd, int expReply) throws IOException {
+    protected void sendCommand(String cmd, int expReply) throws IOException {
         sendCommand(cmd, "", expReply);
     }
     
     private int parseReply(String reply) {
-        return Integer.parseInt(reply);
+        String code = new StringTokenizer(reply, "").nextToken();
+        return Integer.parseInt(code);
     }
     
     //Destructor

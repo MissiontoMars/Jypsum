@@ -12,13 +12,13 @@ import java.util.*;
 public class Envelope {
     /* SMTP-sender of the message (in this case, contents of From-header. */
     public String sender;
-
+    private static final String CRLF = "\r\n";
     /* SMTP-recipient, or contents of To-header. */
     public String recipient;
     public String cc; /* Person to cc: to */
     public String destHost; /* Target MX-host */
     public InetAddress destAddr; /* Destination Server address */
-
+    public String eLetter;
     /* The actual message */
     public Msg message;
 
@@ -31,7 +31,9 @@ public class Envelope {
         /* Get message. We must escape the message to make sure that 
         there are no single periods on a line.
         This would mess up sending the mail. */
-        message = escapeMessage(myMessage); 
+        eLetter = dataString(myMessage);
+        //Don't change message, just add and pass
+        //message = escapeMessage(myMessage); 
         /* Take the name of the local mailserver and map it into an
         * InetAddress */
         destHost = myServer;
@@ -46,10 +48,10 @@ public class Envelope {
     }
 
     //Returns for DATA transmission Header and Body w/ escape sequence
-    public String dataString(Msg myMsg) {
-        String out = myMsg.getHeader() + CLRF;
+    private String dataString(Msg myMsg) {
+        String out = myMsg.getHeaders() + CRLF;
         out += escapeMessage(myMsg.getBody());
-        out += CLRF + "." + CLRF;
+        out += CRLF + "." + CRLF;
         return out;
     }
 
