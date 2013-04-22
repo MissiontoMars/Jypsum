@@ -74,7 +74,7 @@ public class SMTPClient {
     }
     
     protected int parseReply(String reply) {
-        String code = new StringTokenizer(reply, "").nextToken();
+        String code = new StringTokenizer(reply, " ").nextToken();
         return Integer.parseInt(code);
     }
     
