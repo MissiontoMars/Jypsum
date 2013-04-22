@@ -14,10 +14,12 @@ public class Main {
 
         @SuppressWarnings("unused")
         public static void main (String[] args) throws Exception {
-            if (args[0].equals("--debug") || args[0].equals("-d")) {
+            if (args.length > 0) {
+                if (args[0].equals("--debug") || args[0].equals("-d")) {
                     Main debugJypsum = new Main("DEBUG");
                     debugJypsum.debug(); //Do options
-            } else { 
+                }
+            } else {
                 Main myJypsum = new Main();
             }
         }
