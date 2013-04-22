@@ -104,7 +104,8 @@ public class UI extends Frame {
 				System.out.println("Need sender!");
 				return;
 			}
-			if((toField.getText()).equals("")) {
+
+            if((toField.getText()).equals("")) {
 				System.out.println("Need recipient!");
 				return;
 			}
@@ -112,7 +113,7 @@ public class UI extends Frame {
 			if(usrName.getState())
 				System.out.println("Checked.");
 			/* Create the message */
-
+            
 			// Modified the message format to include Extra fields
 			try {
 				System.out.println("Writing a letter");
@@ -126,7 +127,7 @@ public class UI extends Frame {
 
 				/* Check that the message is valid, i.e., sender and
                 recipient addresses look ok. */
-				if(!mailMessage.isValid()) {
+				if(ccField.getText() != "" && !mailMessage.isValid()) {
 					return;
 				}
 
