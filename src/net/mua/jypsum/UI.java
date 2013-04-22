@@ -3,6 +3,7 @@ import java.io.*;
 import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 public class UI extends Frame {
 	private Button btSend = new Button("Send");
@@ -89,7 +90,7 @@ public class UI extends Frame {
 	class SendListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) { 
 			System.out.println("Sending mail");
-			Envelope envelope;  // TRY IT HERE 
+			//Envelope envelope;  // TRY IT HERE 
 			/* Check that we have the local mailserver */
 			if ((serverField.getText()).equals("")) {
 				System.out.println("Need name of local mailserver!");
@@ -112,63 +113,86 @@ public class UI extends Frame {
 
 			if(usrName.getState())
 				System.out.println("Checked.");
-			/* Create the message */
-            
-			// Modified the message format to include Extra fields
-			try {
-				System.out.println("Writing a letter");
-				Msg mailMessage = new Msg(fromField.getText(), 
-						toField.getText(),
-						ccField.getText(),
-						subjectField.getText(), 
-						messageText.getText(),
-						usrName.getState(),
-						serverField.getText());
+			/* Create the message*/
+			queueMail();
+		}
 
+		private void queueMail() {
+                System.out.println("Writing a letter");
+                if (!ccField.getText().equals("")) {
+                    StringTokenizer list = new StringTokenizer(ccField.getText(), " ");
+                        while(list.hasMoreTokens()) {
+                            String i = list.nextToken();
+                            System.out.println("To Mr. " + i ); 
+                            try {
+                            Msg oneOfMany = new Msg(fromField.getText(), 
+                                i,
+                                ccField.getText(),
+                                subjectField.getText(), 
+                                messageText.getText(),
+                                usrName.getState(),
+                                serverField.getText());
+                            sendIt(oneOfMany);
+                            } catch (IOException e) {
+                            }
+                    }
+                } else {
+                    try{ 
+                        Msg oneOfOne = new Msg(fromField.getText(), 
+                            toField.getText(),
+                            ccField.getText(),
+                            subjectField.getText(), 
+                            messageText.getText(),
+                            usrName.getState(),
+                            serverField.getText());
+                        sendIt(oneOfOne);
+                    } catch (IOException e) {
+                    }
+                }
+        }
+        
+        private void sendIt(Msg mailMessage) {
+            try {
 				/* Check that the message is valid, i.e., sender and
                 recipient addresses look ok. */
-				if(ccField.getText() != "" && !mailMessage.isValid()) {
-					return;
+				if(!mailMessage.isValid()) {
+				    throw new IOException();
 				}
-
+                
+                Envelope envelope;
 				/* Create the envelope, open the connection and try to send
                 the message. */
 				try {
 				    System.out.println("Stuffing an envelope");
 					envelope = new Envelope(mailMessage, 
 							serverField.getText());
-				} catch (UnknownHostException e) {
+				
+                    System.out.println("Opening Socket...");
+                    SMTPClient connection = new SMTPClient(envelope);
+                    connection.send(envelope);
+                    connection.close();
+                } catch (UnknownHostException e) {
 					/* If there is an error, do not go further */
-					return;
 				}
 
-			}
-			catch(IOException e) {
-				return;
-			}
-
-			try {
-			    System.out.println("Opening Socket...");
-                SMTPClient connection = new SMTPClient(envelope);
-				
-				connection.send(envelope);
-				connection.close();
 			} catch (IOException error) {
 				System.out.println("Sending failed: " + error);
-				return;
 			}
-			System.out.println("Mail sent succesfully!");
+			    System.out.println("Mail sent succesfully!");
 		}
+
 	}
 
 	/* Clear the fields in the GUI. */
 	class ClearListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Clearing fields");
+			System.out.println("");
 			fromField.setText("");
 			toField.setText("");
 			subjectField.setText("");
 			messageText.setText("");
+			ccField.setText("");
+			serverField.setText("");
 		}
 	}
 

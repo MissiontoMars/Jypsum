@@ -10,7 +10,7 @@ public class Msg {
     private String from;
     private String to;
     private String cc;
-    private String hostServer;
+    public String hostServer;
     private String userName;
     private static final String CRLF = "\r\n";
 
@@ -43,15 +43,11 @@ public class Msg {
     public String getFrom() { return "<" + from + ">"; }
     public String getTo() { return "<" + to + ">"; }
     public String getCc() { return cc; }
-
+    
+    //TODO Replace with regex validator
     public boolean isValid() {
         int fromAt = from.indexOf('@');
         int toAt = to.indexOf('@');
-        int ccAt;
-        if (cc.isEmpty())
-            ccAt = cc.indexOf('@');
-        else
-            ccAt = 0;
         if (fromAt < 1 || (from.length() - fromAt) <= 1) {
             System.out.println("Sender address is invalid");
             return false;
@@ -60,11 +56,13 @@ public class Msg {
             System.out.println("Recipient address is invalid");
             return false;
         }
-
-        if (cc.isEmpty() && (ccAt < 1 || (cc.length() - ccAt) <= 1)) {
-            System.out.println("CC: address is invalid");
+        //FAIL TO FAIL CC
+        //now checks each cc as individual mail
+        /*if (!cc.isEmpty() && (ccAt < 1 || (cc.length() - ccAt) <= 1)) {
+            System.out.println("CC: adidress is invalid");
+            System.out.println("Case1: cc is " + cc);
             return false;
-        }
+        }*/
         
         // Not more than one @
         if (fromAt != from.lastIndexOf('@')) {
@@ -75,10 +73,11 @@ public class Msg {
             System.out.println("Recipient address is invalid");
             return false;
         }	
-        if ((cc.isEmpty()) && ccAt != cc.lastIndexOf('@')) {
-            System.out.println("CC: address is invalid");
+        /*if ((!cc.isEmpty()) && ccAt != cc.lastIndexOf('@')) {
+            System.out.println("CC: addr ess is invalid");
+            System.out.println("Case2: cc is " + cc);
             return false;
-        }
+        }*/
         return true;
     }
     

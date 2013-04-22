@@ -17,20 +17,32 @@ public class SMTPClient {
         clientSocket = new Socket(env.destHost, SMTP_PORT);
         fromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         toServer = new DataOutputStream(clientSocket.getOutputStream());
-        
-        String localhost = InetAddress.getLocalHost().toString();
-        
-        sendCommand("HELO", 250); //Handshake
-        System.out.println("HELO");
+        String localhost = InetAddress.getLocalHost().getCanonicalHostName();
+        System.out.println("local hostname: " + localhost);
+        String firstLine = fromServer.readLine();
+        System.out.println(firstLine);
+        if (220 != parseReply(firstLine)) {
+            System.out.println("not ready");
+            throw new IOException();
+        }
+
+        System.out.println("Try 1");
+        if (501 == sendCommand("HELO", 250)) {
+            System.out.println("Try 2");
+            if (501 == sendCommand("HELO", localhost, 250)) {
+                System.out.println("Try 3");
+                sendCommand("HELO", "niflheimr.world.tree", 250); //Handshake
+            }
+        }
+        //System.out.println("Sending HELO\n");
         isConnected = true;
     }
     
     public void send(Envelope myEnv) throws IOException {
-        sendCommand("MAIL FROM", myEnv.sender, 250);
-        sendCommand("RCPT TO", myEnv.recipient, 250);
+        sendCommand("MAIL FROM:", myEnv.sender, 250);
+        sendCommand("RCPT TO:", myEnv.recipient, 250);
         sendCommand("DATA", 354);
         sendCommand(myEnv.eLetter, 250);
-        //sendCommand(CLRF + "." + CLRF, 250);
         this.close();
     }
     
@@ -44,17 +56,19 @@ public class SMTPClient {
         }
     }
     
-    protected void sendCommand(String cmd, String append, int expReply) throws IOException {
+    protected int sendCommand(String cmd, String append, int expReply) throws IOException {
         //command to server
-        if (!append.isEmpty()) {
-            System.out.print("\n" + cmd + " " + append);
+        if (!append.equals("")) {
+            System.out.println(cmd + " " + append);
             toServer.writeBytes(cmd + " " + append + CRLF);
         } else {
-            System.out.print("\n" + cmd);
+            System.out.println(cmd);
             toServer.writeBytes(cmd + CRLF);
         }
         //read reply
-        int replyCode = parseReply(fromServer.readLine());
+        String output = fromServer.readLine();
+        System.out.println(output + "\n");
+        int replyCode = parseReply(output);
         //verify server reply code is same as parameter
         //throw exception if not
         if (replyCode == expReply) {
@@ -62,15 +76,15 @@ public class SMTPClient {
         } else {
             System.out.println("Rcv code: " + replyCode);
             System.out.println("expected: " + expReply);
-            throw new IOException();
+            //throw new IOException();
         }
-        
+        return replyCode;
     }
     
     //Sugar for sending commands without user input fields
     //Like HELO
-    protected void sendCommand(String cmd, int expReply) throws IOException {
-        sendCommand(cmd, "", expReply);
+    protected int sendCommand(String cmd, int expReply) throws IOException {
+        return sendCommand(cmd, "", expReply);
     }
     
     protected int parseReply(String reply) {

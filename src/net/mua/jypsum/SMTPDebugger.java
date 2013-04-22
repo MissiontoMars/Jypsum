@@ -20,7 +20,7 @@ public class SMTPDebugger extends SMTPClient {
     }
 
     @Override
-    protected void sendCommand(String cmd, String append, int expReply) throws IOException {
+    protected int sendCommand(String cmd, String append, int expReply) throws IOException {
         //command to server
         if (!append.isEmpty()) {
             System.out.print(cmd + " " + append + CRLF);
@@ -38,6 +38,7 @@ public class SMTPDebugger extends SMTPClient {
             System.out.println("expected: " + expReply);
             throw new IOException();
         }
+        return replyCode;
         
     }
 
