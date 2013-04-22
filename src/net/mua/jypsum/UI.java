@@ -115,6 +115,7 @@ public class UI extends Frame {
 
 			// Modified the message format to include Extra fields
 			try {
+				System.out.println("Writing a letter");
 				Msg mailMessage = new Msg(fromField.getText(), 
 						toField.getText(),
 						ccField.getText(),
@@ -132,6 +133,7 @@ public class UI extends Frame {
 				/* Create the envelope, open the connection and try to send
                 the message. */
 				try {
+				    System.out.println("Stuffing an envelope");
 					envelope = new Envelope(mailMessage, 
 							serverField.getText());
 				} catch (UnknownHostException e) {
@@ -145,11 +147,8 @@ public class UI extends Frame {
 			}
 
 			try {
-                //COMMENT TO DEBUG
-                SMTPClient Connection = new SMTPDebugger(envelope);
-			    //UNCOMMENT TO DEBUG
-				SMTPClient connection = new SMTPDebugger(envelope);
-				//END DEBUG
+			    System.out.println("Opening Socket...");
+                SMTPClient connection = new SMTPClient(envelope);
 				
 				connection.send(envelope);
 				connection.close();

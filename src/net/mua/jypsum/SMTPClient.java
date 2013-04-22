@@ -21,6 +21,7 @@ public class SMTPClient {
         String localhost = InetAddress.getLocalHost().toString();
         
         sendCommand("HELO", 250); //Handshake
+        System.out.println("HELO");
         isConnected = true;
     }
     
@@ -46,8 +47,10 @@ public class SMTPClient {
     protected void sendCommand(String cmd, String append, int expReply) throws IOException {
         //command to server
         if (!append.isEmpty()) {
+            System.out.print("\n" + cmd + " " + append);
             toServer.writeBytes(cmd + " " + append + CRLF);
         } else {
+            System.out.print("\n" + cmd);
             toServer.writeBytes(cmd + CRLF);
         }
         //read reply
@@ -55,8 +58,6 @@ public class SMTPClient {
         //verify server reply code is same as parameter
         //throw exception if not
         if (replyCode == expReply) {
-            System.out.println("Sending to Server:");
-            System.out.println(cmd);
             System.out.println("Received code: " + replyCode);
         } else {
             System.out.println("Rcv code: " + replyCode);
@@ -72,7 +73,7 @@ public class SMTPClient {
         sendCommand(cmd, "", expReply);
     }
     
-    private int parseReply(String reply) {
+    protected int parseReply(String reply) {
         String code = new StringTokenizer(reply, "").nextToken();
         return Integer.parseInt(code);
     }
